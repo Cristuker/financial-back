@@ -14,21 +14,25 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  name           String   @db.VarChar(255)
-  email          String   @unique
-  password       String   @db.VarChar(255)
-  cpfCnpj        String   @unique
-  phoneNumber    String   @db.VarChar(255)
-  contracts      Contract[]
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(255)
+  email    String @unique
+  password String @db.VarChar(255)
 }
 
+model Client {
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  cpfCnpj     String     @unique
+  phoneNumber String     @db.VarChar(255)
+  contracts   Contract[]
+}
 
 model Contract {
   id             Int      @id @default(autoincrement())
   contractNumber String   @db.VarChar(255)
   contractDate   DateTime
   contractValue  Decimal
-  user           User @relation(fields: [userId], references: [id])
-  userId         Int
+  Client         Client   @relation(fields: [clientId], references: [id])
+  clientId       Int
 }
