@@ -20,8 +20,15 @@ model User {
   password       String   @db.VarChar(255)
   cpfCnpj        String   @unique
   phoneNumber    String   @db.VarChar(255)
+  contracts      Contract[]
+}
+
+
+model Contract {
+  id             Int      @id @default(autoincrement())
   contractNumber String   @db.VarChar(255)
   contractDate   DateTime
   contractValue  Decimal
-
+  user           User @relation(fields: [userId], references: [id])
+  userId         Int
 }
