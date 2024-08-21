@@ -24,6 +24,11 @@ export class UserService {
     return userMapper(createdUser);
   }
 
+  async findById(id: number): Promise<UserDTO> {
+    const user = await this.userRepository.findOneById(id);
+    return userMapper(user);
+  }
+
   private async encryptPassword(password: string) {
     return await bcrypt.hash(password, this.saltOrRounds);
   }
