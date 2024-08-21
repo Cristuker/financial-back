@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, Post } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { CreateUserDTO } from './dto/create.user.dto';
 import { UserDTO } from './dto/user.dto';
@@ -11,7 +11,6 @@ export class UserService {
 
   constructor(private readonly userRepository: UserRepository) {}
 
-  @Post()
   async create(user: CreateUserDTO): Promise<UserDTO> {
     const alreadyExistUser = await this.userRepository.findOneByEmail(
       user.email,
@@ -27,5 +26,10 @@ export class UserService {
 
   private async encryptPassword(password: string) {
     return await bcrypt.hash(password, this.saltOrRounds);
+  }
+
+  async findOneByEmail(email: string) {
+    const user = await this.userRepository.findOneByEmail(email);
+    return userMapper(user);
   }
 }
