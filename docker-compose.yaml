@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:14.5
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: financial
+    ports:
+      - "5432:5432"
