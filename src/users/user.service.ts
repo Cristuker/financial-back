@@ -4,6 +4,7 @@ import { CreateUserDTO } from './dto/create.user.dto';
 import { UserDTO } from './dto/user.dto';
 import { userMapper } from './user.mapper';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDTO } from './dto/update.user.dto';
 
 @Injectable()
 export class UserService {
@@ -36,5 +37,10 @@ export class UserService {
   async findOneByEmail(email: string) {
     const user = await this.userRepository.findOneByEmail(email);
     return userMapper(user);
+  }
+
+  async update(id: number, user: UpdateUserDTO) {
+    const updatedUser = await this.userRepository.update(id, user);
+    return userMapper(updatedUser);
   }
 }

@@ -1,6 +1,14 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Put,
+  Param,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { CreateUserDTO } from './dto/create.user.dto';
+import { CreateUserDTO, UpdateUserDTO } from './dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -17,5 +25,16 @@ export class UserController {
   @ApiResponse({ status: 201, description: 'Created.' })
   async create(@Body() createUserDto: CreateUserDTO) {
     return await this.userService.create(createUserDto);
+  }
+
+  @Put('/:id')
+  @ApiOperation({ summary: 'Update a user ' })
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({ type: UpdateUserDTO })
+  @ApiTags('User')
+  @ApiResponse({ status: 400, description: 'Bad Request.' })
+  @ApiResponse({ status: 200, description: 'Ok.' })
+  async update(@Body() user: UpdateUserDTO, @Param('id') id: number) {
+    return await this.userService.update(id, user);
   }
 }

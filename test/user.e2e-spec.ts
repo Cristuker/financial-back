@@ -122,4 +122,36 @@ describe('User (e2e)', () => {
         .expect(409);
     });
   });
+
+  describe('PUT /users/:id', () => {
+    it('should update a user', async () => {
+      const userData: CreateUserDTO = {
+        email: 'cristian@email.com',
+        name: 'Cristian',
+        password: 'Password@1234',
+        cpfCnpj: '44057310800',
+        phoneNumber: '13988089287',
+      };
+      const createdUser = await prismaClient.user.create({
+        data: userData,
+      });
+
+      createdUser.name = 'Cristian2';
+      createdUser.cpfCnpj = '555747292';
+      createdUser.phoneNumber = '13988464627';
+
+      const id = createdUser.id;
+      Reflect.deleteProperty(createdUser, 'id');
+
+      await request(app.getHttpServer())
+        .put(`/user/${id}`)
+        .send(createdUser)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.name).toBe(createdUser.name);
+          expect(response.body.cpfCnpj).toBe(createdUser.cpfCnpj);
+          expect(response.body.phoneNumber).toBe(createdUser.phoneNumber);
+        });
+    });
+  });
 });

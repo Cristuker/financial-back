@@ -1,7 +1,18 @@
-export interface UpdateUserDTO {
-  name?: string;
-  email?: string;
-  password?: string;
-  phoneNumber?: string;
-  cpfCnpj?: string;
+import { IsString } from 'class-validator';
+
+export class UpdateUserDTO {
+  @IsString()
+  name: string;
+
+  @IsString()
+  email: string;
+
+  @IsString()
+  password: string;
+
+  @IsString()
+  phoneNumber: string;
+
+  @IsString()
+  cpfCnpj: string;
 }
