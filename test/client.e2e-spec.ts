@@ -107,7 +107,18 @@ describe('Client (e2e)', () => {
         .post('/client')
         .set('Authorization', `Bearer ${token.body.access_token}`)
         .send(client)
-        .expect(201);
+        .then(async (response) => {
+          const result = await prismaClient.client.findUnique({
+            where: {
+              id: response.body.id,
+            },
+          });
+          expect(result).toBeTruthy();
+          expect(result.name).toBe(client.name);
+          expect(result.cpfCnpj).toBe(client.cpfCnpj);
+          expect(result.phoneNumber).toBe(client.phoneNumber);
+          expect(response.status).toBe(201);
+        });
     });
   });
 });

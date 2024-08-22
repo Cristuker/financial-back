@@ -7,10 +7,10 @@ export class ClientService {
   constructor(private readonly clientRepository: ClientRepository) {}
 
   async create(data: CreateClientDTO) {
-    return this.clientRepository.create(data);
+    return await this.clientRepository.create(data);
   }
 
-  async findByEmail(email: string) {
-    return this.clientRepository.findByEmail(email);
+  async findById(id: number) {
+    return await this.clientRepository.findOne(id);
   }
 }

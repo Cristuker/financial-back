@@ -41,6 +41,17 @@ describe('Contract (e2e)', () => {
     });
   };
 
+  const stubClient = (token) => {
+    return request(app.getHttpServer())
+      .post('/client')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        cpfCnpj: '44057310800',
+        name: 'João',
+        phoneNumber: '13988089287',
+      });
+  };
+
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     client = new Client({
@@ -100,23 +111,37 @@ describe('Contract (e2e)', () => {
   });
 
   describe('Post', () => {
-    // TODO remover
-    it.skip('should create a contract', async () => {
+    it('should create a contract', async () => {
       await stubCreateUser();
 
       const token = await stubLogin();
-      console.log(token.body);
+      const client = await stubClient(token.body.access_token);
       const contractData: CreateContractDTO = {
         contractDate: new Date(),
         contractNumber: '123',
         contractValue: 10000,
-        clientId: 1,
+        clientId: client.body.id,
       };
+
       await request(app.getHttpServer())
         .post('/contract')
         .set('Authorization', `Bearer ${token.body.access_token}`)
         .send(contractData)
-        .expect(201);
+        .then(async (response) => {
+          const result = await prismaClient.contract.findUnique({
+            where: {
+              id: response.body.id,
+            },
+          });
+          expect(result).toBeTruthy();
+          expect(response.status).toBe(201);
+          expect(result.contractNumber).toBe(contractData.contractNumber);
+          expect(Number(result.contractValue)).toBe(contractData.contractValue);
+          expect(new Date(result.contractDate)).toStrictEqual(
+            contractData.contractDate,
+          );
+          expect(result.clientId).toBe(contractData.clientId);
+        });
     });
   });
 });

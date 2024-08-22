@@ -8,23 +8,23 @@ export class ClientRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(data: CreateClientDTO) {
-    return this.prismaService.client.create({
+    return await this.prismaService.client.create({
       data,
     });
   }
 
   async findAll() {
-    return this.prismaService.client.findMany();
+    return await this.prismaService.client.findMany();
   }
 
   async findOne(id: number) {
-    return this.prismaService.client.findUnique({
+    return await this.prismaService.client.findUnique({
       where: { id },
     });
   }
 
   async update(id: number, data: UpdateClientDTO) {
-    return this.prismaService.client.update({
+    return await this.prismaService.client.update({
       where: { id },
       data,
     });
