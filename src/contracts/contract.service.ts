@@ -29,4 +29,28 @@ export class ContractService {
 
     return this.contractRepository.create(newContract);
   }
+
+  async listFiltered(
+    date: string,
+    clientId: number,
+    contractNumber: string,
+    page: number,
+    limit: number,
+  ) {
+    if (isNaN(page)) {
+      page = 1;
+    }
+
+    if (isNaN(limit)) {
+      limit = 10;
+    }
+
+    return this.contractRepository.listFiltered(
+      date,
+      clientId,
+      contractNumber,
+      page,
+      limit,
+    );
+  }
 }

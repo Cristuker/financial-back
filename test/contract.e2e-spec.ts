@@ -52,6 +52,18 @@ describe('Contract (e2e)', () => {
       });
   };
 
+  const stubContract = async (token: string, clientId: number) => {
+    await request(app.getHttpServer())
+      .post('/contract')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        contractDate: new Date(),
+        contractNumber: '123' + Math.random(),
+        contractValue: 10000,
+        clientId: clientId,
+      });
+  };
+
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     client = new Client({
@@ -141,6 +153,44 @@ describe('Contract (e2e)', () => {
             contractData.contractDate,
           );
           expect(result.clientId).toBe(contractData.clientId);
+        });
+    });
+  });
+
+  describe('Get', () => {
+    it('should list without filter', async () => {
+      await stubCreateUser();
+
+      const token = await stubLogin();
+      const client = await stubClient(token.body.access_token);
+      await stubContract(token.body.access_token, client.body.id);
+      await stubContract(token.body.access_token, client.body.id);
+      await stubContract(token.body.access_token, client.body.id);
+
+      await request(app.getHttpServer())
+        .get('/contract')
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .then(async (response) => {
+          expect(response.status).toBe(200);
+          expect(response.body.contracts.length).toBe(3);
+        });
+    });
+
+    it('should list with filter', async () => {
+      await stubCreateUser();
+
+      const token = await stubLogin();
+      const client = await stubClient(token.body.access_token);
+      await stubContract(token.body.access_token, client.body.id);
+      await stubContract(token.body.access_token, client.body.id);
+      await stubContract(token.body.access_token, client.body.id);
+
+      await request(app.getHttpServer())
+        .get('/contract?page=1&limit=2')
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .then(async (response) => {
+          expect(response.status).toBe(200);
+          expect(response.body.contracts.length).toBe(2);
         });
     });
   });
