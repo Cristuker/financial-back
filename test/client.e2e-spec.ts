@@ -34,6 +34,17 @@ describe('Client (e2e)', () => {
     });
   };
 
+  const stubClient = (token: string) => {
+    return request(app.getHttpServer())
+      .post('/client')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        cpfCnpj: '44057310800',
+        name: 'João',
+        phoneNumber: '13988089287',
+      });
+  };
+
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     client = new Client({
@@ -118,6 +129,36 @@ describe('Client (e2e)', () => {
           expect(result.cpfCnpj).toBe(client.cpfCnpj);
           expect(result.phoneNumber).toBe(client.phoneNumber);
           expect(response.status).toBe(201);
+        });
+    });
+  });
+
+  describe('Put', () => {
+    it('should update a client', async () => {
+      await stubCreateUser();
+      const token = await stubLogin();
+      const { body: client } = await stubClient(token.body.access_token);
+      const id = client.id;
+      Reflect.deleteProperty(client, 'id');
+      client.name = 'João2';
+      client.cpfCnpj = '47567282';
+      client.phoneNumber = '13988464627';
+
+      await request(app.getHttpServer())
+        .put(`/client/${id}`)
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .send(client)
+        .then(async (response) => {
+          const result = await prismaClient.client.findUnique({
+            where: {
+              id,
+            },
+          });
+          expect(result).toBeTruthy();
+          expect(result.name).toBe(client.name);
+          expect(result.cpfCnpj).toBe(client.cpfCnpj);
+          expect(result.phoneNumber).toBe(client.phoneNumber);
+          expect(response.status).toBe(200);
         });
     });
   });
