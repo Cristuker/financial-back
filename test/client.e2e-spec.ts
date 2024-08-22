@@ -90,7 +90,7 @@ describe('Client (e2e)', () => {
         DATABASE_URL: urlConnection,
       },
     });
-  });
+  }, 10000);
 
   describe('Post', () => {
     it('should create a client', async () => {

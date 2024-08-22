@@ -45,12 +45,30 @@ export class ContractService {
       limit = 10;
     }
 
-    return this.contractRepository.listFiltered(
+    const contracts = await this.contractRepository.listFiltered(
       date,
       clientId,
       contractNumber,
       page,
       limit,
     );
+    return this.generateStatus(contracts);
+  }
+
+  generateStatus(contracts: ContractDTO[]) {
+    return contracts.map((contract) => {
+      if (contract.canceled) {
+        contract.status = 'Cancelados';
+        return contract;
+      }
+      if (contract.contractDate > new Date()) {
+        contract.status = 'Em Atraso';
+        return contract;
+      }
+      if (contract.contractDate < new Date()) {
+        contract.status = 'Dentro do Prazo';
+        return contract;
+      }
+    });
   }
 }

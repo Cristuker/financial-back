@@ -8,5 +8,6 @@ export const contractMapper = (contract: Contract): ContractDTO => {
     contractDate: contract.contractDate,
     contractValue: Number(contract.contractValue),
     clientId: contract.clientId,
+    canceled: contract.canceled,
   };
 };

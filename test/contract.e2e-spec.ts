@@ -191,6 +191,7 @@ describe('Contract (e2e)', () => {
         .then(async (response) => {
           expect(response.status).toBe(200);
           expect(response.body.contracts.length).toBe(2);
+          expect(response.body.contracts[0]).toHaveProperty('status');
         });
     });
   });
