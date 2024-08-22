@@ -3,6 +3,7 @@ import { ContractRepository } from './contract.repository';
 import { ContractDTO } from './dto/contract.dto';
 import { CreateContractDTO } from './dto/create.contract.dto';
 import { ClientService } from '@app/clients/client.service';
+import { UpdateContractDTO } from './dto/update.contract.dto';
 
 @Injectable()
 export class ContractService {
@@ -78,5 +79,9 @@ export class ContractService {
 
   async removeClient(id: number) {
     await this.contractRepository.update(id, { clientId: null });
+  }
+
+  async update(id: number, data: UpdateContractDTO) {
+    return await this.contractRepository.update(id, data);
   }
 }

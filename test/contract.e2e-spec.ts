@@ -41,7 +41,7 @@ describe('Contract (e2e)', () => {
     });
   };
 
-  const stubClient = (token) => {
+  const stubClient = (token: string) => {
     return request(app.getHttpServer())
       .post('/client')
       .set('Authorization', `Bearer ${token}`)
@@ -211,7 +211,7 @@ describe('Contract (e2e)', () => {
         .patch(`/contract/${contract.body.id}/cancel`)
         .set('Authorization', `Bearer ${token.body.access_token}`)
         .then(async (response) => {
-          expect(response.status).toBe(200);
+          expect(response.status).toBe(204);
           const result = await prismaClient.contract.findUnique({
             where: {
               id: contract.body.id,
@@ -235,13 +235,47 @@ describe('Contract (e2e)', () => {
         .patch(`/contract/${contract.body.id}/remove`)
         .set('Authorization', `Bearer ${token.body.access_token}`)
         .then(async (response) => {
-          expect(response.status).toBe(200);
+          expect(response.status).toBe(204);
           const result = await prismaClient.contract.findUnique({
             where: {
               id: contract.body.id,
             },
           });
           expect(result.clientId).toBeNull();
+        });
+    });
+  });
+
+  describe('Put', () => {
+    it('update contract', async () => {
+      await stubCreateUser();
+
+      const token = await stubLogin();
+      const client = await stubClient(token.body.access_token);
+      const { body: contract } = await stubContract(
+        token.body.access_token,
+        client.body.id,
+      );
+      const id = contract.id;
+      Reflect.deleteProperty(contract, 'id');
+      contract.contractNumber = '777';
+      contract.contractDate = new Date();
+      contract.contractValue = 20000;
+
+      await request(app.getHttpServer())
+        .put(`/contract/${id}`)
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .send(contract)
+        .then(async (response) => {
+          expect(response.status).toBe(204);
+          const result = await prismaClient.contract.findUnique({
+            where: {
+              id,
+            },
+          });
+          expect(result.contractNumber).toBe(contract.contractNumber);
+          expect(result.contractDate).toStrictEqual(contract.contractDate);
+          expect(Number(result.contractValue)).toBe(contract.contractValue);
         });
     });
   });

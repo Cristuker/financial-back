@@ -69,7 +69,7 @@ describe('Client (e2e)', () => {
       }),
     );
     await app.init();
-  });
+  }, 10000);
 
   afterAll(async () => {
     await prismaClient.$disconnect();
@@ -90,7 +90,7 @@ describe('Client (e2e)', () => {
         DATABASE_URL: urlConnection,
       },
     });
-  }, 10000);
+  });
 
   describe('Post', () => {
     it('should create a client', async () => {

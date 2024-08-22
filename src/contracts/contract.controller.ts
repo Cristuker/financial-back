@@ -9,12 +9,14 @@ import {
   Query,
   Patch,
   Param,
+  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ContractService } from './contract.service';
 import { CreateContractDTO } from './dto/create.contract.dto';
 import { AuthGuard } from '@app/auth/auth.guard';
 import { ListContractDTO } from './dto/list.contract.dto';
+import { UpdateContractDTO } from './dto/update.contract.dto';
 
 @Controller('contract')
 @ApiTags('Contract')
@@ -61,21 +63,35 @@ export class ContractController {
 
   @Patch('/:id/cancel')
   @ApiOperation({ summary: 'Cancel contract' })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiTags('Contract')
   @ApiResponse({ status: 200, description: 'Ok.' })
   @UseGuards(AuthGuard)
   async cancel(@Param('id') id: number) {
-    return await this.contractService.cancel(id);
+    await this.contractService.cancel(id);
   }
 
   @Patch('/:id/remove')
   @ApiOperation({ summary: 'Remove client from contract' })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiTags('Contract')
   @ApiResponse({ status: 200, description: 'Ok.' })
   @UseGuards(AuthGuard)
   async removeClient(@Param('id') id: number) {
-    return await this.contractService.removeClient(id);
+    await this.contractService.removeClient(id);
+  }
+
+  @Put('/:id')
+  @ApiOperation({ summary: 'Remove client from contract' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBody({ type: UpdateContractDTO })
+  @ApiTags('Contract')
+  @ApiResponse({ status: 200, description: 'Ok.' })
+  @UseGuards(AuthGuard)
+  async updateContract(
+    @Param('id') id: number,
+    @Body() data: UpdateContractDTO,
+  ) {
+    await this.contractService.update(id, data);
   }
 }
