@@ -31,9 +31,11 @@ export class UserRepository {
   }
 
   async create(data: CreateUserDTO): Promise<User> {
-    return this.prisma.user.create({
+    const result = await this.prisma.user.create({
       data,
     });
+    Reflect.deleteProperty(result, 'password');
+    return result;
   }
 
   async update(id: number, data: UpdateUserDTO) {
