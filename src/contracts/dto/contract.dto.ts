@@ -3,5 +3,5 @@ export class ContractDTO {
   contractNumber: string;
   contractDate: Date;
   contractValue: number;
-  userId: number;
+  clientId: number;
 }

@@ -7,6 +7,6 @@ export const contractMapper = (contract: Contract): ContractDTO => {
     contractNumber: contract.contractNumber,
     contractDate: contract.contractDate,
     contractValue: Number(contract.contractValue),
-    userId: contract.userId,
+    clientId: contract.clientId,
   };
 };

@@ -3,7 +3,4 @@ export interface UserDTO {
   name: string;
   email: string;
   password: string;
-  phoneNumber: string;
-  cpfCnpj: string;
-  contracts: [];
 }

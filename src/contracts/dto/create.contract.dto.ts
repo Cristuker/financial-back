@@ -15,6 +15,6 @@ export class CreateContractDTO {
   contractValue: number;
 
   @IsNumber()
-  @ApiProperty({ description: 'User id', example: 50 })
-  userId: number;
+  @ApiProperty({ description: 'Client id', example: 50 })
+  clientId: number;
 }

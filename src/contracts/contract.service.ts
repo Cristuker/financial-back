@@ -12,10 +12,7 @@ export class ContractService {
   ) {}
 
   async create(newContract: CreateContractDTO): Promise<ContractDTO> {
-    const userNotExists = await this.usersService.findById(newContract.userId);
-    if (!userNotExists) {
-      throw new BadRequestException('User doest not exist');
-    }
+    // TODO: Verificar cliente
     const contractAlreadyExist =
       await this.contractRepository.findByContractNumber(
         newContract.contractNumber,

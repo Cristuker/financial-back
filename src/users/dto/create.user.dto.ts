@@ -1,10 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsPhoneNumber,
-  IsString,
-  IsStrongPassword,
-} from 'class-validator';
+import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
 
 export class CreateUserDTO {
   @IsString()
@@ -29,10 +24,4 @@ export class CreateUserDTO {
     { message: 'Invalid password ' },
   )
   password: string;
-
-  @IsPhoneNumber('BR')
-  phoneNumber: string;
-
-  @IsString()
-  cpfCnpj: string;
 }

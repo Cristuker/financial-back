@@ -1,24 +1,38 @@
+import { AppModule } from '@app/app.module';
+import { CreateClientDTO } from '@app/clients/dto/create.client.dto';
+import { UsersModule } from '@app/users/users.module';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as request from 'supertest';
-import { UsersModule } from '../src/users/users.module';
-import { AuthModule } from '@app/auth/auth.module';
-import { execSync } from 'node:child_process';
-import { AppModule } from '@app/app.module';
 import { PrismaClient } from '@prisma/client';
 import {
   StartedPostgreSqlContainer,
   PostgreSqlContainer,
 } from '@testcontainers/postgresql';
+import { execSync } from 'node:child_process';
 import { Client } from 'pg';
-import { CreateUserDTO } from '@app/users/dto/create.user.dto';
+import * as request from 'supertest';
 
-describe('Auth e2e', () => {
+describe('Client (e2e)', () => {
   let app: INestApplication;
   let container: StartedPostgreSqlContainer;
   let prismaClient: PrismaClient;
   let urlConnection: string;
   let client: Client;
+
+  const stubCreateUser = () => {
+    return request(app.getHttpServer()).post('/user').send({
+      email: 'cristian@email.com',
+      name: 'Cristian',
+      password: 'Password@1234',
+    });
+  };
+
+  const stubLogin = () => {
+    return request(app.getHttpServer()).post('/auth/login').send({
+      email: 'cristian@email.com',
+      password: 'Password@1234',
+    });
+  };
 
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
@@ -43,7 +57,7 @@ describe('Auth e2e', () => {
     });
 
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule, UsersModule, AuthModule],
+      imports: [AppModule, UsersModule],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -78,31 +92,22 @@ describe('Auth e2e', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
+  describe('Post', () => {
+    it('should create a client', async () => {
+      const client: CreateClientDTO = {
+        cpfCnpj: '44057310800',
+        name: 'João',
+        phoneNumber: '13988089287',
+      };
 
-  it('should generate a token', async () => {
-    const userData: CreateUserDTO = {
-      email: 'cristian@email.com',
-      name: 'Cristian',
-      password: 'Password@1234',
-    };
+      await stubCreateUser();
+      const token = await stubLogin();
 
-    await request(app.getHttpServer()).post('/user').send(userData).expect(201);
-
-    const user = {
-      email: 'cristian@email.com',
-      password: 'Password@1234',
-    };
-
-    return request(app.getHttpServer())
-      .post('/auth/login')
-      .send(user)
-      .expect(200)
-      .then((response) => {
-        expect(response.body).toHaveProperty('access_token');
-        expect(response.body.access_token.length).toBeGreaterThan(0);
-      });
+      await request(app.getHttpServer())
+        .post('/client')
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .send(client)
+        .expect(201);
+    });
   });
 });

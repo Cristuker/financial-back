@@ -83,8 +83,6 @@ describe('User (e2e)', () => {
         email: 'cristian@email.com',
         name: 'Cristian',
         password: 'Password@1234',
-        cpfCnpj: '44057310800',
-        phoneNumber: '13988089287',
       };
 
       await request(app.getHttpServer())
@@ -99,8 +97,6 @@ describe('User (e2e)', () => {
 
       expect(userDb).toBeTruthy();
       expect(userDb.email).toBe(userData.email);
-      expect(userDb.cpfCnpj).toBe(userData.cpfCnpj);
-      expect(userDb.phoneNumber).toBe(userData.phoneNumber);
       expect(userDb.password).not.toBe(userData.password);
     });
 
@@ -109,8 +105,6 @@ describe('User (e2e)', () => {
         email: 'cristian@email.com',
         name: 'Cristian',
         password: 'Password@1234',
-        cpfCnpj: '44057310800',
-        phoneNumber: '13988089287',
       };
       await prismaClient.user.create({
         data: userData,
@@ -129,16 +123,12 @@ describe('User (e2e)', () => {
         email: 'cristian@email.com',
         name: 'Cristian',
         password: 'Password@1234',
-        cpfCnpj: '44057310800',
-        phoneNumber: '13988089287',
       };
       const createdUser = await prismaClient.user.create({
         data: userData,
       });
 
       createdUser.name = 'Cristian2';
-      createdUser.cpfCnpj = '555747292';
-      createdUser.phoneNumber = '13988464627';
 
       const id = createdUser.id;
       Reflect.deleteProperty(createdUser, 'id');
@@ -149,8 +139,6 @@ describe('User (e2e)', () => {
         .expect(200)
         .then((response) => {
           expect(response.body.name).toBe(createdUser.name);
-          expect(response.body.cpfCnpj).toBe(createdUser.cpfCnpj);
-          expect(response.body.phoneNumber).toBe(createdUser.phoneNumber);
         });
     });
   });

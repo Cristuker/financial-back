@@ -9,10 +9,4 @@ export class UpdateUserDTO {
 
   @IsString()
   password: string;
-
-  @IsString()
-  phoneNumber: string;
-
-  @IsString()
-  cpfCnpj: string;
 }
