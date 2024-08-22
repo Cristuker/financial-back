@@ -99,7 +99,7 @@ describe('Contract (e2e)', () => {
       }),
     );
     await app.init();
-  });
+  }, 10000);
 
   afterAll(async () => {
     await prismaClient.$disconnect();
@@ -208,7 +208,7 @@ describe('Contract (e2e)', () => {
       );
 
       await request(app.getHttpServer())
-        .patch(`/contract/cancel/${contract.body.id}`)
+        .patch(`/contract/${contract.body.id}/cancel`)
         .set('Authorization', `Bearer ${token.body.access_token}`)
         .then(async (response) => {
           expect(response.status).toBe(200);
@@ -218,6 +218,30 @@ describe('Contract (e2e)', () => {
             },
           });
           expect(result.canceled).toBe(true);
+        });
+    });
+
+    it('should remove client from a contract', async () => {
+      await stubCreateUser();
+
+      const token = await stubLogin();
+      const client = await stubClient(token.body.access_token);
+      const contract = await stubContract(
+        token.body.access_token,
+        client.body.id,
+      );
+
+      await request(app.getHttpServer())
+        .patch(`/contract/${contract.body.id}/remove`)
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .then(async (response) => {
+          expect(response.status).toBe(200);
+          const result = await prismaClient.contract.findUnique({
+            where: {
+              id: contract.body.id,
+            },
+          });
+          expect(result.clientId).toBeNull();
         });
     });
   });

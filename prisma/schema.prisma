@@ -33,7 +33,7 @@ model Contract {
   contractNumber String   @db.VarChar(255)
   contractDate   DateTime
   contractValue  Decimal
-  Client         Client   @relation(fields: [clientId], references: [id])
-  clientId       Int
-  canceled       Boolean   @default(false)
+  Client         Client?   @relation(fields: [clientId], references: [id])
+  clientId       Int?      
+  canceled       Boolean  @default(false)
 }

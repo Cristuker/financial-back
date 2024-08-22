@@ -75,4 +75,8 @@ export class ContractService {
   async cancel(id: number) {
     await this.contractRepository.update(id, { canceled: true });
   }
+
+  async removeClient(id: number) {
+    await this.contractRepository.update(id, { clientId: null });
+  }
 }

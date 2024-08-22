@@ -59,7 +59,7 @@ export class ContractController {
     };
   }
 
-  @Patch('/cancel/:id')
+  @Patch('/:id/cancel')
   @ApiOperation({ summary: 'Cancel contract' })
   @HttpCode(HttpStatus.OK)
   @ApiTags('Contract')
@@ -67,5 +67,15 @@ export class ContractController {
   @UseGuards(AuthGuard)
   async cancel(@Param('id') id: number) {
     return await this.contractService.cancel(id);
+  }
+
+  @Patch('/:id/remove')
+  @ApiOperation({ summary: 'Remove client from contract' })
+  @HttpCode(HttpStatus.OK)
+  @ApiTags('Contract')
+  @ApiResponse({ status: 200, description: 'Ok.' })
+  @UseGuards(AuthGuard)
+  async removeClient(@Param('id') id: number) {
+    return await this.contractService.removeClient(id);
   }
 }
