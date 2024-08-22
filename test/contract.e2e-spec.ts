@@ -53,7 +53,7 @@ describe('Contract (e2e)', () => {
   };
 
   const stubContract = async (token: string, clientId: number) => {
-    await request(app.getHttpServer())
+    return await request(app.getHttpServer())
       .post('/contract')
       .set('Authorization', `Bearer ${token}`)
       .send({
@@ -192,6 +192,32 @@ describe('Contract (e2e)', () => {
           expect(response.status).toBe(200);
           expect(response.body.contracts.length).toBe(2);
           expect(response.body.contracts[0]).toHaveProperty('status');
+        });
+    });
+  });
+
+  describe('Patch', () => {
+    it('should cancel a contract', async () => {
+      await stubCreateUser();
+
+      const token = await stubLogin();
+      const client = await stubClient(token.body.access_token);
+      const contract = await stubContract(
+        token.body.access_token,
+        client.body.id,
+      );
+
+      await request(app.getHttpServer())
+        .patch(`/contract/cancel/${contract.body.id}`)
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .then(async (response) => {
+          expect(response.status).toBe(200);
+          const result = await prismaClient.contract.findUnique({
+            where: {
+              id: contract.body.id,
+            },
+          });
+          expect(result.canceled).toBe(true);
         });
     });
   });

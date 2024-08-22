@@ -55,7 +55,7 @@ export class ContractService {
     return this.generateStatus(contracts);
   }
 
-  generateStatus(contracts: ContractDTO[]) {
+  private generateStatus(contracts: ContractDTO[]) {
     return contracts.map((contract) => {
       if (contract.canceled) {
         contract.status = 'Cancelados';
@@ -70,5 +70,9 @@ export class ContractService {
         return contract;
       }
     });
+  }
+
+  async cancel(id: number) {
+    await this.contractRepository.update(id, { canceled: true });
   }
 }

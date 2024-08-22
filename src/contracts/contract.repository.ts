@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateContractDTO } from './dto/create.contract.dto';
 import { ContractDTO } from './dto/contract.dto';
 import { contractMapper } from './contract.mapper';
+import { UpdateContractDTO } from './dto/update.contract.dto';
 
 @Injectable()
 export class ContractRepository {
@@ -43,9 +44,15 @@ export class ContractRepository {
       skip: (Number(page) - 1) * Number(limit),
     });
 
-
     return result.map((contract) => {
       return contractMapper(contract);
+    });
+  }
+
+  async update(id: number, data: UpdateContractDTO) {
+    await this.prisma.contract.update({
+      where: { id },
+      data,
     });
   }
 }
