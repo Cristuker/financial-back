@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -13,6 +15,7 @@ import { ClientService } from './client.service';
 import { AuthGuard } from '@app/auth/auth.guard';
 import { CreateClientDTO } from './dto/create.client.dto';
 import { UpdateClientDTO } from './dto/update.client.dto';
+import { ListClientDTO } from './dto/list.client.dto';
 
 @Controller('client')
 @ApiTags('Client')
@@ -40,5 +43,23 @@ export class ClientController {
   @UseGuards(AuthGuard)
   async updateClient(@Param('id') id: number, @Body() data: UpdateClientDTO) {
     return await this.clientService.update(id, data);
+  }
+
+  @Get('/')
+  @ApiOperation({ summary: 'Create contract' })
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({ type: ListClientDTO })
+  @ApiTags('Client')
+  @ApiResponse({ status: 200, description: 'Ok.' })
+  @UseGuards(AuthGuard)
+  async list(
+    @Query('name') name: string = '',
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    const result = await this.clientService.listFiltered(name, page, limit);
+    return {
+      clients: result,
+    };
   }
 }

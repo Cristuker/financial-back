@@ -55,4 +55,11 @@ export class ContractRepository {
       data,
     });
   }
+
+  async findByClientId(id: any): Promise<ContractDTO[]> {
+    const result = await this.prisma.contract.findMany({
+      where: { clientId: id },
+    });
+    return result.map((contract) => contractMapper(contract));
+  }
 }

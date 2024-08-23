@@ -45,6 +45,18 @@ describe('Client (e2e)', () => {
       });
   };
 
+  const stubContract = async (token: string, clientId: number) => {
+    return await request(app.getHttpServer())
+      .post('/contract')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        contractDate: new Date(),
+        contractNumber: '123' + Math.random(),
+        contractValue: 10000,
+        clientId: clientId,
+      });
+  };
+
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     client = new Client({
@@ -159,6 +171,29 @@ describe('Client (e2e)', () => {
           expect(result.cpfCnpj).toBe(client.cpfCnpj);
           expect(result.phoneNumber).toBe(client.phoneNumber);
           expect(response.status).toBe(200);
+        });
+    });
+  });
+
+  describe('Get', () => {
+    it('should list without filter', async () => {
+      await stubCreateUser();
+
+      const token = await stubLogin();
+      const client = await stubClient(token.body.access_token);
+      Promise.all([
+        await stubContract(token.body.access_token, client.body.id),
+        await stubContract(token.body.access_token, client.body.id),
+        await stubContract(token.body.access_token, client.body.id),
+      ]);
+
+      await request(app.getHttpServer())
+        .get('/client')
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .then(async (response) => {
+          expect(response.status).toBe(200);
+          expect(response.body.clients.length).toBe(1);
+          expect(response.body.clients[0].contracts.length).toBe(3);
         });
     });
   });

@@ -2,6 +2,7 @@ import { PrismaService } from '@app/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { CreateClientDTO } from './dto/create.client.dto';
 import { UpdateClientDTO } from './dto/update.client.dto';
+import { clientMapper } from './client.mapper';
 
 @Injectable()
 export class ClientRepository {
@@ -34,5 +35,32 @@ export class ClientRepository {
     await this.prismaService.client.delete({
       where: { id },
     });
+  }
+
+  async listFiltered(name: string, page: number, limit: number) {
+    const result = await this.prismaService.client.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+      },
+      take: Number(limit),
+      skip: (Number(page) - 1) * Number(limit),
+      include: {
+        contracts: {
+          select: {
+            id: true,
+            contractNumber: true,
+            contractDate: true,
+            contractValue: true,
+            clientId: true,
+            canceled: true,
+          },
+        },
+      },
+    });
+
+    return result.map((client) => clientMapper(client));
   }
 }

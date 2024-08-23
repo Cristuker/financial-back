@@ -4,6 +4,7 @@ import { ContractDTO } from './dto/contract.dto';
 import { CreateContractDTO } from './dto/create.contract.dto';
 import { ClientService } from '@app/clients/client.service';
 import { UpdateContractDTO } from './dto/update.contract.dto';
+import { paginationNormalizer } from '@app/utils/pagination.normalize';
 
 @Injectable()
 export class ContractService {
@@ -38,20 +39,15 @@ export class ContractService {
     page: number,
     limit: number,
   ) {
-    if (isNaN(page)) {
-      page = 1;
-    }
-
-    if (isNaN(limit)) {
-      limit = 10;
-    }
+    const { limit: limitNormalized, page: pageNormalized } =
+      paginationNormalizer(page, limit);
 
     const contracts = await this.contractRepository.listFiltered(
       date,
       clientId,
       contractNumber,
-      page,
-      limit,
+      pageNormalized,
+      limitNormalized,
     );
     return this.generateStatus(contracts);
   }
@@ -83,5 +79,9 @@ export class ContractService {
 
   async update(id: number, data: UpdateContractDTO) {
     return await this.contractRepository.update(id, data);
+  }
+
+  async findByClientId(id: any) {
+    return await this.contractRepository.findByClientId(id);
   }
 }
