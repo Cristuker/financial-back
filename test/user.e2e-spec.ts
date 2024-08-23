@@ -54,7 +54,7 @@ describe('User (e2e)', () => {
       }),
     );
     await app.init();
-  });
+  }, 10000);
 
   afterAll(async () => {
     await prismaClient.$disconnect();
