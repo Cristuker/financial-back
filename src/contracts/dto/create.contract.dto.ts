@@ -7,7 +7,10 @@ export class CreateContractDTO {
   contractNumber: string;
 
   @IsDateString()
-  @ApiProperty({ description: 'Contract date', example: '2022-01-01' })
+  @ApiProperty({
+    description: 'Contract date',
+    example: '2024-08-23T00:00:00.000Z',
+  })
   contractDate: Date;
 
   @IsNumber()

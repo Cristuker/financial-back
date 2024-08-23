@@ -14,7 +14,7 @@ async function bootstrap() {
     .setTitle('Financial API')
     .setDescription('The Financial API description')
     .setVersion('1.0')
-    .addTag('financial')
+    .addTag('Financial')
     .build();
 
   app.useGlobalPipes(

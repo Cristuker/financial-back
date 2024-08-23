@@ -23,5 +23,10 @@ export class CreateUserDTO {
     },
     { message: 'Invalid password ' },
   )
+  @ApiProperty({
+    description: 'Password to login',
+    example: 'Password@1234',
+    required: true,
+  })
   password: string;
 }
