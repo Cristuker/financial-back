@@ -244,6 +244,30 @@ describe('Contract (e2e)', () => {
           expect(result.clientId).toBeNull();
         });
     });
+
+    it('should pay a contract', async () => {
+      await stubCreateUser();
+      const token = await stubLogin();
+      const client = await stubClient(token.body.access_token);
+      const contract = await stubContract(
+        token.body.access_token,
+        client.body.id,
+      );
+
+      await request(app.getHttpServer())
+        .patch(`/contract/${contract.body.id}/pay`)
+        .set('Authorization', `Bearer ${token.body.access_token}`)
+        .then(async (response) => {
+          expect(response.status).toBe(204);
+
+          const result = await prismaClient.contract.findUnique({
+            where: {
+              id: contract.body.id,
+            },
+          });
+          expect(result.payed).toBe(true);
+        });
+    });
   });
 
   describe('Put', () => {

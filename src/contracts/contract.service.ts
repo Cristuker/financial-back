@@ -84,4 +84,8 @@ export class ContractService {
   async findByClientId(id: any) {
     return await this.contractRepository.findByClientId(id);
   }
+
+  async pay(id: number) {
+    await this.contractRepository.update(id, { payed: true });
+  }
 }

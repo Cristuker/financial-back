@@ -36,4 +36,5 @@ model Contract {
   Client         Client?   @relation(fields: [clientId], references: [id])
   clientId       Int?      
   canceled       Boolean  @default(false)
+  payed          Boolean  @default(false)
 }

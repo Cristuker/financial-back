@@ -65,7 +65,7 @@ export class ContractController {
   @ApiOperation({ summary: 'Cancel contract' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiTags('Contract')
-  @ApiResponse({ status: 200, description: 'Ok.' })
+  @ApiResponse({ status: 204, description: 'No content.' })
   @UseGuards(AuthGuard)
   async cancel(@Param('id') id: number) {
     await this.contractService.cancel(id);
@@ -75,7 +75,7 @@ export class ContractController {
   @ApiOperation({ summary: 'Remove client from contract' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiTags('Contract')
-  @ApiResponse({ status: 200, description: 'Ok.' })
+  @ApiResponse({ status: 204, description: 'No content.' })
   @UseGuards(AuthGuard)
   async removeClient(@Param('id') id: number) {
     await this.contractService.removeClient(id);
@@ -86,12 +86,22 @@ export class ContractController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBody({ type: UpdateContractDTO })
   @ApiTags('Contract')
-  @ApiResponse({ status: 200, description: 'Ok.' })
+  @ApiResponse({ status: 204, description: 'No content.' })
   @UseGuards(AuthGuard)
   async updateContract(
     @Param('id') id: number,
     @Body() data: UpdateContractDTO,
   ) {
     await this.contractService.update(id, data);
+  }
+
+  @Patch('/:id/pay')
+  @ApiOperation({ summary: 'Pay a contract' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiTags('Contract')
+  @ApiResponse({ status: 204, description: 'No content.' })
+  @UseGuards(AuthGuard)
+  async pay(@Param('id') id: number) {
+    await this.contractService.pay(id);
   }
 }
