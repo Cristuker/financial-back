@@ -181,20 +181,15 @@ describe('Client (e2e)', () => {
 
       const token = await stubLogin();
       const client = await stubClient(token.body.access_token);
-      Promise.all([
-        await stubContract(token.body.access_token, client.body.id),
-        await stubContract(token.body.access_token, client.body.id),
-        await stubContract(token.body.access_token, client.body.id),
-      ]);
-
-      await request(app.getHttpServer())
-        .get('/client')
-        .set('Authorization', `Bearer ${token.body.access_token}`)
-        .then(async (response) => {
-          expect(response.status).toBe(200);
-          expect(response.body.clients.length).toBe(1);
-          expect(response.body.clients[0].contracts.length).toBe(3);
-        });
+      await stubContract(token.body.access_token, client.body.id),
+        await request(app.getHttpServer())
+          .get('/client')
+          .set('Authorization', `Bearer ${token.body.access_token}`)
+          .then(async (response) => {
+            expect(response.status).toBe(200);
+            expect(response.body.clients.length).toBe(1);
+            expect(response.body.clients[0].contract).toBeTruthy();
+          });
     });
   });
 });

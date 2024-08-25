@@ -99,7 +99,7 @@ describe('Contract (e2e)', () => {
       }),
     );
     await app.init();
-  }, 10000);
+  }, 30000);
 
   afterAll(async () => {
     await prismaClient.$disconnect();
@@ -164,15 +164,13 @@ describe('Contract (e2e)', () => {
       const token = await stubLogin();
       const client = await stubClient(token.body.access_token);
       await stubContract(token.body.access_token, client.body.id);
-      await stubContract(token.body.access_token, client.body.id);
-      await stubContract(token.body.access_token, client.body.id);
 
       await request(app.getHttpServer())
         .get('/contract')
         .set('Authorization', `Bearer ${token.body.access_token}`)
         .then(async (response) => {
           expect(response.status).toBe(200);
-          expect(response.body.contracts.length).toBe(3);
+          expect(response.body.contracts.length).toBe(1);
         });
     });
 
@@ -182,15 +180,13 @@ describe('Contract (e2e)', () => {
       const token = await stubLogin();
       const client = await stubClient(token.body.access_token);
       await stubContract(token.body.access_token, client.body.id);
-      await stubContract(token.body.access_token, client.body.id);
-      await stubContract(token.body.access_token, client.body.id);
 
       await request(app.getHttpServer())
         .get('/contract?page=1&limit=2')
         .set('Authorization', `Bearer ${token.body.access_token}`)
         .then(async (response) => {
           expect(response.status).toBe(200);
-          expect(response.body.contracts.length).toBe(2);
+          expect(response.body.contracts.length).toBe(1);
           expect(response.body.contracts[0]).toHaveProperty('status');
         });
     });

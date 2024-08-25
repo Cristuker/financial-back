@@ -28,21 +28,17 @@ describe('UserRepository', () => {
   it('should find all users', async () => {
     await prisma.user.create({
       data: {
-        cpfCnpj: '13323',
         email: 'email@email.com',
         name: 'financial',
         password: '123',
-        phoneNumber: '123123',
       },
     });
 
     await prisma.user.create({
       data: {
-        cpfCnpj: '123',
         email: 'email1@email.com',
         name: 'financial',
         password: '123',
-        phoneNumber: '123123',
       },
     });
     const users = await service.findAll();
@@ -52,21 +48,17 @@ describe('UserRepository', () => {
   it('should delete a user', async () => {
     await prisma.user.create({
       data: {
-        cpfCnpj: '13323',
         email: 'email@email.com',
         name: 'financial',
         password: '123',
-        phoneNumber: '123123',
       },
     });
 
     const created = await prisma.user.create({
       data: {
-        cpfCnpj: '123',
         email: 'email1@email.com',
         name: 'financial',
         password: '123',
-        phoneNumber: '123123',
       },
     });
 
@@ -79,26 +71,22 @@ describe('UserRepository', () => {
   it('should find a user by id', async () => {
     const created = await prisma.user.create({
       data: {
-        cpfCnpj: '123',
         email: 'email1@email.com',
         name: 'financial',
         password: '123',
-        phoneNumber: '123123',
       },
     });
 
     const user = await service.findOne(created.id);
-    expect(user.cpfCnpj).toBe(created.cpfCnpj);
+    expect(user.email).toBe(created.email);
   });
 
   it('should edit a user', async () => {
     const created = await prisma.user.create({
       data: {
-        cpfCnpj: '123',
         email: 'email1@email.com',
         name: 'financial',
         password: '123',
-        phoneNumber: '123123',
       },
     });
 
