@@ -5,6 +5,7 @@ import { CreateContractDTO } from './dto/create.contract.dto';
 import { ClientService } from '@app/clients/client.service';
 import { UpdateContractDTO } from './dto/update.contract.dto';
 import { paginationNormalizer } from '@app/utils/pagination.normalize';
+import { generateStatusLot } from '@app/utils/generateStatus';
 
 @Injectable()
 export class ContractService {
@@ -49,24 +50,7 @@ export class ContractService {
       pageNormalized,
       limitNormalized,
     );
-    return this.generateStatus(contracts);
-  }
-
-  private generateStatus(contracts: ContractDTO[]) {
-    return contracts.map((contract) => {
-      if (contract.canceled) {
-        contract.status = 'Cancelados';
-        return contract;
-      }
-      if (contract.contractDate > new Date()) {
-        contract.status = 'Em Atraso';
-        return contract;
-      }
-      if (contract.contractDate < new Date()) {
-        contract.status = 'Dentro do Prazo';
-        return contract;
-      }
-    });
+    return generateStatusLot(contracts);
   }
 
   async cancel(id: number) {

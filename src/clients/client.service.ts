@@ -3,6 +3,7 @@ import { ClientRepository } from './client.repository';
 import { CreateClientDTO } from './dto/create.client.dto';
 import { UpdateClientDTO } from './dto/update.client.dto';
 import { paginationNormalizer } from '@app/utils/pagination.normalize';
+import { generateStatus } from '@app/utils/generateStatus';
 
 @Injectable()
 export class ClientService {
@@ -23,10 +24,17 @@ export class ClientService {
   async listFiltered(name: string, page: number, limit: number) {
     const { limit: limitNormalized, page: pageNormalized } =
       paginationNormalizer(page, limit);
-    return await this.clientRepository.listFiltered(
+    const clients = await this.clientRepository.listFiltered(
       name,
       pageNormalized,
       limitNormalized,
     );
+    return clients.map((client) => {
+      return {
+        ...client,
+        contract:
+          client.contract !== null ? generateStatus(client.contract) : null,
+      };
+    });
   }
 }
