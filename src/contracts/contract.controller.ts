@@ -36,7 +36,7 @@ export class ContractController {
   }
 
   @Get('/')
-  @ApiOperation({ summary: 'Create contract' })
+  @ApiOperation({ summary: 'List contract' })
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: ListContractDTO })
   @ApiTags('Contract')

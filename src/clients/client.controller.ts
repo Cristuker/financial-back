@@ -46,7 +46,7 @@ export class ClientController {
   }
 
   @Get('/')
-  @ApiOperation({ summary: 'Create contract' })
+  @ApiOperation({ summary: 'List clients' })
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: ListClientDTO })
   @ApiTags('Client')

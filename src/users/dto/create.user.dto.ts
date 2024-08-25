@@ -21,7 +21,7 @@ export class CreateUserDTO {
       minSymbols: 1,
       minUppercase: 1,
     },
-    { message: 'Invalid password ' },
+    { message: 'Invalid password' },
   )
   @ApiProperty({
     description: 'Password to login',
