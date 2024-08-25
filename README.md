@@ -1,73 +1,88 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Financial Management
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Projeto de gerenciamento de contratos e clientes.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Requisitos para rodar o projeto
 
-## Installation
+* Node.js
+* NPM
+* Docker
+* docker compose
+
+## Bibliotecas
+
+* NestJS
+* Prisma
+* Prisma Client
+* Testcontainers
+* Jest
+* PG
+
+## Como rodar
+
+**1.** Clone este repositório
+
+```bash
+$ git clonehttps://github.com/Cristuker/financial-back.git
+```
+
+**2.** Acesse a pasta do projeto e instale as dependências na raiz
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+**3.** Crie um arquivo .env com as seguintes váriaveis de ambiente:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+DATABASE_URL=
+JWT_SECRET=
 ```
+> Na raiz do projeto existe um arquivo .env.example para ser usado como base
 
-## Test
+**4.** Suba o banco de dados
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ docker-compose up -d # ou docker compose up -d, depende da sua versão do compose
 ```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**5.** Rode as migrations com o prisma
 
-## Stay in touch
+```bash
+$ npx prisma migrate dev
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**6.** Inicie o projeto
 
-## License
+```bash
+$ npm run start:dev 
+```
 
-Nest is [MIT licensed](LICENSE).
+> Esse projeto conta com documentação feito pelo Swagger na rota /api
+
+
+> O projeto irá rodar na porta 3000 da sua máquina
+
+
+## Testes
+
+O projeto conta com testes e2e para rodar basta parar a execução do projeto e executar o comando abaixo.
+
+```bash
+$ npm run test:e2e  
+```
+
+O projeto também conta com alguns testes uniários que podem ser executados rodando o comando abaixo
+
+```bash
+$ npm t  
+```
+
+## Pontos relevantes
+
+* Os testes estão lentos imagino que por conta do uso do Testcontainers, procurei abordagens diferentes de como usa-lo mas devido ao tempo e como foi a minha primeira vez com a biblioteca não consegui melhorar muito.
+
+* O teste conta com poucos testes unitários e de integração pois dei foco em teste e2e.
