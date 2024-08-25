@@ -86,3 +86,6 @@ $ npm t
 * Os testes estão lentos imagino que por conta do uso do Testcontainers, procurei abordagens diferentes de como usa-lo mas devido ao tempo e como foi a minha primeira vez com a biblioteca não consegui melhorar muito.
 
 * O teste conta com poucos testes unitários e de integração pois dei foco em teste e2e.
+
+
+Por [Cristian Silva](https://cristiansilva.dev/)
