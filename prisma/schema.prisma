@@ -21,11 +21,11 @@ model User {
 }
 
 model Client {
-  id          Int        @id @default(autoincrement())
-  name        String     @db.VarChar(255)
-  cpfCnpj     String     @unique
-  phoneNumber String     @db.VarChar(255)
-  contracts   Contract[]
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  cpfCnpj     String    @unique
+  phoneNumber String    @db.VarChar(255)
+  contract    Contract?
 }
 
 model Contract {
@@ -33,8 +33,8 @@ model Contract {
   contractNumber String   @db.VarChar(255)
   contractDate   DateTime
   contractValue  Decimal
-  Client         Client?   @relation(fields: [clientId], references: [id])
-  clientId       Int?      
+  Client         Client?  @relation(fields: [clientId], references: [id])
+  clientId       Int?     @unique
   canceled       Boolean  @default(false)
   payed          Boolean  @default(false)
 }

@@ -5,5 +5,5 @@ export class ClientDBDTO {
   name: string;
   cpfCnpj: string;
   phoneNumber: string;
-  contracts: ContractDTO[];
+  contract: ContractDTO;
 }

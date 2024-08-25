@@ -17,6 +17,6 @@ export class ClientDTO {
   })
   phoneNumber: string;
 
-  @ApiProperty({ description: 'Client contracts', type: [ContractDTO] })
-  contracts: ContractDTO[];
+  @ApiProperty({ description: 'Client contracts', type: ContractDTO })
+  contract: ContractDTO;
 }

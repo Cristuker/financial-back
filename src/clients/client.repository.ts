@@ -48,7 +48,7 @@ export class ClientRepository {
       take: Number(limit),
       skip: (Number(page) - 1) * Number(limit),
       include: {
-        contracts: {
+        contract: {
           select: {
             id: true,
             contractNumber: true,
@@ -56,6 +56,7 @@ export class ClientRepository {
             contractValue: true,
             clientId: true,
             canceled: true,
+            payed: true,
           },
         },
       },
